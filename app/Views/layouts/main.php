@@ -49,6 +49,11 @@
                         <i class="bi bi-diagram-3 me-1"></i>Danh mục
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= url('/forum') ?>">
+                        <i class="bi bi-chat-square-text me-1"></i>Hỏi đáp
+                    </a>
+                </li>
 
                 <?php if (auth()): ?>
                     <li class="nav-item">

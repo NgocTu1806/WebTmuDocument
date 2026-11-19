@@ -238,4 +238,48 @@ CREATE TABLE login_attempts (
     attempted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_email_ip_time (email, ip_address, attempted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================
+-- FORUM_POSTS (Diễn đàn hỏi đáp sinh viên TMU)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS forum_posts (
+    id             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id        INT UNSIGNED NOT NULL,
+    faculty_id     INT UNSIGNED DEFAULT NULL,
+    subject_id     INT UNSIGNED DEFAULT NULL,
+    title          VARCHAR(255) NOT NULL,
+    content        TEXT NOT NULL,
+    view_count     INT UNSIGNED DEFAULT 0,
+    answers_count  INT UNSIGNED DEFAULT 0,
+    is_solved      TINYINT(1) DEFAULT 0,
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at     DATETIME DEFAULT NULL,
+    INDEX idx_user (user_id),
+    INDEX idx_subject (subject_id),
+    INDEX idx_faculty (faculty_id),
+    INDEX idx_created (created_at),
+    CONSTRAINT fk_forum_posts_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_forum_posts_faculty FOREIGN KEY (faculty_id) REFERENCES faculties(id) ON DELETE SET NULL,
+    CONSTRAINT fk_forum_posts_subject FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================
+-- FORUM_ANSWERS (Câu trả lời / thảo luận)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS forum_answers (
+    id             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    post_id        INT UNSIGNED NOT NULL,
+    user_id        INT UNSIGNED NOT NULL,
+    content        TEXT NOT NULL,
+    is_best_answer TINYINT(1) DEFAULT 0,
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at     DATETIME DEFAULT NULL,
+    INDEX idx_post (post_id),
+    INDEX idx_user (user_id),
+    CONSTRAINT fk_forum_answers_post FOREIGN KEY (post_id) REFERENCES forum_posts(id) ON DELETE CASCADE,
+    CONSTRAINT fk_forum_answers_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 SET FOREIGN_KEY_CHECKS = 1;

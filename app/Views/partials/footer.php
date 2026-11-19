@@ -38,6 +38,11 @@
                         </a>
                     </li>
                     <li>
+                        <a href="<?= url('/forum') ?>" class="footer-link">
+                            <i class="bi bi-chevron-right me-1 small"></i>Diễn đàn hỏi đáp
+                        </a>
+                    </li>
+                    <li>
                         <a href="<?= url('/search') ?>" class="footer-link">
                             <i class="bi bi-chevron-right me-1 small"></i>Tìm kiếm nâng cao
                         </a>

@@ -156,5 +156,28 @@
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
+
+    <!-- Forum Q&A Banner Section -->
+    <div class="card border-0 shadow-sm rounded-4 mt-5 p-4 p-md-5 text-white overflow-hidden position-relative" style="background: linear-gradient(135deg, #1e3a8a 0%, #1565C0 100%);">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill fw-bold mb-2">
+                    <i class="bi bi-chat-dots-fill me-1"></i>Hỏi đáp học tập
+                </span>
+                <h3 class="fw-bold mb-2">Bạn gặp khó khăn trong bài tập hay ôn thi?</h3>
+                <p class="text-white-50 mb-0 lead fs-6">
+                    Tham gia ngay Diễn đàn hỏi đáp sinh viên TMU để cùng trao đổi, thảo luận đề thi và nhận trợ giúp từ bạn bè trong trường!
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="<?= url('/forum') ?>" class="btn btn-warning btn-lg fw-bold px-4 shadow-sm me-2">
+                    <i class="bi bi-chat-square-text me-1"></i>Khám phá Diễn đàn
+                </a>
+                <a href="<?= url('/forum/create') ?>" class="btn btn-outline-light btn-lg fw-semibold">
+                    <i class="bi bi-plus-circle me-1"></i>Đặt câu hỏi
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 

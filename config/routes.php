@@ -20,6 +20,17 @@ return [
     ['POST', '/api/ai/clear',                  'AiChatController@clear'],
     ['GET',  '/users/{id}/avatar',             'ProfileController@avatar'],
 
+    // Forum / Q&A routes (Diễn đàn hỏi đáp sinh viên)
+    ['GET',  '/forum',                         'ForumController@index'],
+    ['GET',  '/forum/create',                  'ForumController@create'],
+    ['POST', '/forum',                         'ForumController@store'],
+    ['GET',  '/forum/{id}',                    'ForumController@show'],
+    ['POST', '/forum/{id}/answers',            'ForumController@storeAnswer'],
+    ['POST', '/forum/{id}/solve',              'ForumController@toggleSolve'],
+    ['POST', '/forum/{id}/answers/{answer_id}/best', 'ForumController@setBestAnswer'],
+    ['POST', '/forum/{id}/delete',             'ForumController@destroy'],
+    ['POST', '/forum/answers/{id}/delete',     'ForumController@destroyAnswer'],
+
     // Auth routes
     ['GET',  '/login',                         'AuthController@loginForm'],
     ['POST', '/login',                         'AuthController@login'],

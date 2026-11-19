@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?= e(csrfToken()) ?>">
     <title><?= e($title ?? 'Admin — TMU Tài Liệu') ?></title>
+    <link rel="icon" type="image/png" href="<?= asset('images/favicon.png') ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="<?= asset('css/style.css') ?>" rel="stylesheet">
@@ -100,8 +101,9 @@ ob_start();
 <div class="admin-wrapper">
     <!-- Desktop Sidebar -->
     <div class="admin-sidebar">
-        <a href="<?= url('/admin') ?>" class="brand">
-            <i class="bi bi-shield-check me-2"></i>TMU Admin
+        <a href="<?= url('/admin') ?>" class="brand d-flex align-items-center gap-2">
+            <img src="<?= asset('images/logo.png') ?>" alt="Logo TMU" style="height: 32px; width: auto; object-fit: contain;" class="bg-white rounded px-1 py-0.5">
+            <span>TMU Admin</span>
         </a>
         <?= $adminNavHtml ?>
     </div>
@@ -109,8 +111,9 @@ ob_start();
     <!-- Mobile Offcanvas Sidebar -->
     <div class="offcanvas offcanvas-start text-white admin-offcanvas" style="background: #1a1a2e; width: 260px;" tabindex="-1" id="adminMobileSidebar">
         <div class="offcanvas-header border-bottom border-secondary border-opacity-25">
-            <a href="<?= url('/admin') ?>" class="text-white text-decoration-none fw-bold fs-5">
-                <i class="bi bi-shield-check me-2"></i>TMU Admin
+            <a href="<?= url('/admin') ?>" class="text-white text-decoration-none fw-bold fs-5 d-flex align-items-center gap-2">
+                <img src="<?= asset('images/logo.png') ?>" alt="Logo TMU" style="height: 30px; width: auto; object-fit: contain;" class="bg-white rounded px-1 py-0.5">
+                <span>TMU Admin</span>
             </a>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
         </div>

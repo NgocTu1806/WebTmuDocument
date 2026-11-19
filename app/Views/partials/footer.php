@@ -4,10 +4,8 @@
         <div class="row g-4">
             <!-- Brand & Intro -->
             <div class="col-lg-4 col-md-6">
-                <a href="<?= url('/') ?>" class="d-inline-flex align-items-center text-white text-decoration-none mb-3">
-                    <span class="footer-brand-icon rounded-3 d-inline-flex align-items-center justify-content-center me-2">
-                        <i class="bi bi-journal-bookmark-fill fs-5"></i>
-                    </span>
+                <a href="<?= url('/') ?>" class="d-inline-flex align-items-center text-white text-decoration-none mb-3 gap-2">
+                    <img src="<?= asset('images/logo.png') ?>" alt="Logo TMU" style="height: 40px; width: auto; object-fit: contain;" class="bg-white rounded px-1 py-0.5">
                     <span class="fs-5 fw-bold">TMU Tài Liệu</span>
                 </a>
                 <p class="text-white-50 small lh-lg mb-3">

@@ -5,7 +5,7 @@
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
                     <div class="text-center mb-4">
-                        <i class="bi bi-person-plus-fill text-primary fs-1"></i>
+                        <img src="<?= asset('images/logo.png') ?>" alt="Logo TMU" style="height: 65px; width: auto; object-fit: contain;" class="mb-2">
                         <h2 class="fw-bold mt-2">Đăng ký tài khoản</h2>
                         <p class="text-muted">Tham gia cộng đồng học tập sinh viên TMU</p>
                     </div>

@@ -19,8 +19,9 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="<?= url('/') ?>">
-            <i class="bi bi-journal-bookmark-fill me-2"></i>TMU Tài Liệu
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="<?= url('/') ?>">
+            <img src="<?= asset('images/logo.png') ?>" alt="Logo TMU" style="height: 38px; width: auto; object-fit: contain;" class="bg-white rounded px-1 py-0.5 shadow-sm">
+            <span>TMU Tài Liệu</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
             <span class="navbar-toggler-icon"></span>

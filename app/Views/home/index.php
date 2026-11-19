@@ -3,6 +3,9 @@
 <!-- Hero Section -->
 <section class="hero-section text-center py-5">
     <div class="container">
+        <div class="mb-3">
+            <img src="<?= asset('images/logo.png') ?>" alt="Logo TMU" style="height: 80px; width: auto; object-fit: contain;" class="bg-white rounded-3 p-2 shadow-sm">
+        </div>
         <h1 class="display-5 fw-bold mb-3">Kho Tài Liệu Học Tập TMU</h1>
         <p class="lead mb-4 mx-auto" style="max-width: 650px;">
             Hệ thống chia sẻ giáo trình, bài giảng, đề thi và tài liệu học tập dành riêng cho sinh viên Trường Đại học Thương mại.

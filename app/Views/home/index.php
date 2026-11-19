@@ -1,35 +1,53 @@
 <?php declare(strict_types=1); ?>
 
-<!-- Hero Section -->
-<section class="hero-section text-center py-5">
+<!-- Hero Section with Campus Banner -->
+<section class="hero-section py-5">
     <div class="container">
-        <div class="mb-3">
-            <img src="<?= asset('images/logo.png') ?>" alt="Logo TMU" style="height: 80px; width: auto; object-fit: contain;" class="bg-white rounded-3 p-2 shadow-sm">
-        </div>
-        <h1 class="display-5 fw-bold mb-3">Kho Tài Liệu Học Tập TMU</h1>
-        <p class="lead mb-4 mx-auto" style="max-width: 650px;">
-            Hệ thống chia sẻ giáo trình, bài giảng, đề thi và tài liệu học tập dành riêng cho sinh viên Trường Đại học Thương mại.
-        </p>
+        <div class="row align-items-center g-4">
+            <!-- Left Info Column -->
+            <div class="col-lg-7 text-lg-start text-center">
+                <div class="d-inline-flex align-items-center gap-2 bg-white bg-opacity-15 px-3 py-1 rounded-pill mb-3 text-white border border-white border-opacity-25 small shadow-sm">
+                    <img src="<?= asset('images/logo.png') ?>" alt="Logo TMU" style="height: 24px; width: auto;" class="bg-white rounded-circle p-0.5">
+                    <span class="fw-semibold">Cổng Thông Tin Học Liệu Số TMU</span>
+                </div>
+                <h1 class="display-5 fw-bold mb-3 text-white">
+                    Kho Tài Liệu Học Tập<br>
+                    <span class="text-warning">Đại Học Thương Mại</span>
+                </h1>
+                <p class="lead mb-4 text-white-50" style="max-width: 580px;">
+                    Hệ thống chia sẻ giáo trình, slide bài giảng, đề thi và học liệu số chất lượng cao dành riêng cho cộng đồng sinh viên TMU.
+                </p>
 
-        <!-- Search box -->
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
-                <form action="<?= url('/search') ?>" method="GET" class="input-group input-group-lg shadow-sm">
+                <!-- Search box -->
+                <form action="<?= url('/search') ?>" method="GET" class="input-group input-group-lg shadow-sm mb-4" style="max-width: 580px;">
                     <input type="text" name="q" class="form-control" placeholder="Tìm kiếm theo tên môn, giáo trình, đề thi..." required>
                     <button class="btn btn-warning fw-bold px-4" type="submit">
                         <i class="bi bi-search me-1"></i>Tìm kiếm
                     </button>
                 </form>
-            </div>
-        </div>
 
-        <div class="mt-4">
-            <a href="<?= url('/documents/create') ?>" class="btn btn-outline-light me-2">
-                <i class="bi bi-cloud-arrow-up me-1"></i>Đóng góp tài liệu
-            </a>
-            <a href="<?= url('/faculties') ?>" class="btn btn-light text-primary">
-                <i class="bi bi-diagram-3 me-1"></i>Xem theo Khoa/Viện
-            </a>
+                <div class="d-flex flex-wrap gap-2 justify-content-lg-start justify-content-center">
+                    <a href="<?= url('/documents/create') ?>" class="btn btn-light text-primary fw-semibold shadow-sm">
+                        <i class="bi bi-cloud-arrow-up me-1"></i>Đóng góp tài liệu
+                    </a>
+                    <a href="<?= url('/faculties') ?>" class="btn btn-outline-light">
+                        <i class="bi bi-diagram-3 me-1"></i>Xem theo Khoa/Viện
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Banner Column -->
+            <div class="col-lg-5">
+                <div class="banner-card position-relative rounded-4 overflow-hidden shadow-lg border border-white border-3">
+                    <img src="<?= asset('images/banner.webp') ?>" alt="Trường Đại học Thương Mại" class="img-fluid w-100" style="height: 340px; object-fit: cover;">
+                    <div class="position-absolute bottom-0 start-0 end-0 p-3" style="background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);">
+                        <div class="text-white fw-bold fs-6">
+                            <i class="bi bi-geo-alt-fill text-warning me-1"></i>Trường Đại học Thương Mại (TMU)
+                        </div>
+                        <div class="text-white-50 small">79 Đường Hồ Tùng Mậu, Mai Dịch, Cầu Giấy, Hà Nội</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

@@ -80,7 +80,21 @@ main {
 .hero-section {
     background: linear-gradient(135deg, #1565C0 0%, #0d47a1 100%);
     color: white;
-    padding: 4rem 0;
+    padding: 3.5rem 0;
+}
+.banner-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+.banner-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3) !important;
+}
+.banner-card img {
+    transition: transform 0.5s ease;
+}
+.banner-card:hover img {
+    transform: scale(1.04);
 }
 
 /* Footer */

@@ -22,65 +22,16 @@
         </div>
     </div>
 
-    <!-- Forum Quick Stats -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm p-3 d-flex flex-row align-items-center gap-3">
-                <div class="rounded-3 bg-primary bg-opacity-10 text-primary p-3 fs-3">
-                    <i class="bi bi-question-circle"></i>
-                </div>
-                <div>
-                    <div class="fs-4 fw-bold text-dark"><?= number_format($stats['total_posts']) ?></div>
-                    <div class="text-muted small">Tổng câu hỏi thảo luận</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm p-3 d-flex flex-row align-items-center gap-3">
-                <div class="rounded-3 bg-success bg-opacity-10 text-success p-3 fs-3">
-                    <i class="bi bi-check2-circle"></i>
-                </div>
-                <div>
-                    <div class="fs-4 fw-bold text-dark"><?= number_format($stats['solved_posts']) ?></div>
-                    <div class="text-muted small">Câu hỏi đã có câu trả lời hay</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm p-3 d-flex flex-row align-items-center gap-3">
-                <div class="rounded-3 bg-info bg-opacity-10 text-info p-3 fs-3">
-                    <i class="bi bi-chat-square-text"></i>
-                </div>
-                <div>
-                    <div class="fs-4 fw-bold text-dark"><?= number_format($stats['total_answers']) ?></div>
-                    <div class="text-muted small">Lượt tương tác trả lời</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Content Area -->
     <div class="row g-4">
         <!-- Question List (Left Column) -->
         <div class="col-lg-8">
-            <!-- Filter Tabs & Search Bar -->
+            <!-- Filter & Search Bar -->
             <div class="card border-0 shadow-sm p-3 mb-3">
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
-                    <!-- Status Filter Tabs -->
-                    <div class="btn-group btn-group-sm flex-wrap" role="group">
-                        <a href="<?= url('/forum?' . http_build_query(array_merge($filters, ['status' => 'all', 'page' => 1]))) ?>" 
-                           class="btn <?= $filters['status'] === 'all' ? 'btn-primary' : 'btn-outline-primary' ?>">
-                            Tất cả
-                        </a>
-                        <a href="<?= url('/forum?' . http_build_query(array_merge($filters, ['status' => 'unsolved', 'page' => 1]))) ?>" 
-                           class="btn <?= $filters['status'] === 'unsolved' ? 'btn-primary' : 'btn-outline-primary' ?>">
-                            <i class="bi bi-clock me-1"></i>Cần trợ giúp
-                        </a>
-                        <a href="<?= url('/forum?' . http_build_query(array_merge($filters, ['status' => 'solved', 'page' => 1]))) ?>" 
-                           class="btn <?= $filters['status'] === 'solved' ? 'btn-primary' : 'btn-outline-primary' ?>">
-                            <i class="bi bi-check-circle me-1"></i>Đã giải quyết
-                        </a>
-                    </div>
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-chat-dots text-primary me-2"></i>Danh sách câu hỏi
+                    </h5>
 
                     <!-- Sort Dropdown -->
                     <div class="d-flex align-items-center gap-2">
@@ -95,7 +46,6 @@
 
                 <!-- Search inside questions -->
                 <form action="<?= url('/forum') ?>" method="GET" class="input-group input-group-sm">
-                    <input type="hidden" name="status" value="<?= e($filters['status']) ?>">
                     <input type="hidden" name="sort" value="<?= e($filters['sort']) ?>">
                     <?php if (!empty($filters['faculty_id'])): ?>
                         <input type="hidden" name="faculty_id" value="<?= (int)$filters['faculty_id'] ?>">
@@ -130,60 +80,45 @@
                     <?php foreach ($posts['items'] as $post): ?>
                         <div class="card border-0 shadow-sm hover-shadow transition" style="border-radius: 10px;">
                             <div class="card-body p-3 p-md-4">
-                                <div class="d-flex gap-3">
-                                    <!-- Answers count box -->
-                                    <div class="text-center rounded-3 p-2 d-none d-sm-block flex-shrink-0 <?= (int)$post['is_solved'] === 1 ? 'bg-success text-white' : ((int)$post['answers_count'] > 0 ? 'bg-primary-subtle text-primary border border-primary-subtle' : 'bg-light text-muted border') ?>" style="width: 70px;">
-                                        <div class="fs-4 fw-bold lh-1"><?= (int)$post['answers_count'] ?></div>
-                                        <div style="font-size: 0.72rem;">trả lời</div>
+                                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                    <?php if (!empty($post['subject_name'])): ?>
+                                        <span class="badge bg-light text-dark border small">
+                                            <i class="bi bi-book me-1"></i><?= e($post['subject_name']) ?>
+                                        </span>
+                                    <?php endif; ?>
+
+                                    <?php if (!empty($post['faculty_name'])): ?>
+                                        <span class="badge bg-light text-muted border small d-none d-md-inline">
+                                            <?= e($post['faculty_name']) ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <h5 class="fw-bold mb-2">
+                                    <a href="<?= url('/forum/' . $post['id']) ?>" class="text-dark text-decoration-none">
+                                        <?= e($post['title']) ?>
+                                    </a>
+                                </h5>
+
+                                <p class="text-muted small mb-3 lh-sm">
+                                    <?= e(truncate(strip_tags($post['content']), 140)) ?>
+                                </p>
+
+                                <!-- Meta footer -->
+                                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 pt-2 border-top small text-muted">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="fw-semibold text-dark"><?= e($post['full_name'] ?? 'Sinh viên') ?></span>
+                                        <span>&bull;</span>
+                                        <span><?= formatDate($post['created_at'], 'H:i d/m/Y') ?></span>
                                     </div>
 
-                                    <!-- Main Question Content -->
-                                    <div class="flex-grow-1">
-                                        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                                            <?php if ((int)$post['is_solved'] === 1): ?>
-                                                <span class="badge bg-success small"><i class="bi bi-check2 me-1"></i>Đã giải quyết</span>
-                                            <?php elseif ((int)$post['answers_count'] === 0): ?>
-                                                <span class="badge bg-warning text-dark small"><i class="bi bi-question me-1"></i>Cần trợ giúp</span>
-                                            <?php else: ?>
-                                                <span class="badge bg-primary-subtle text-primary small">Đang thảo luận</span>
-                                            <?php endif; ?>
-
-                                            <?php if (!empty($post['subject_name'])): ?>
-                                                <span class="badge bg-light text-dark border small">
-                                                    <i class="bi bi-book me-1"></i><?= e($post['subject_name']) ?>
-                                                </span>
-                                            <?php endif; ?>
-
-                                            <?php if (!empty($post['faculty_name'])): ?>
-                                                <span class="badge bg-light text-muted border small d-none d-md-inline">
-                                                    <?= e($post['faculty_name']) ?>
-                                                </span>
-                                            <?php endif; ?>
-                                        </div>
-
-                                        <h5 class="fw-bold mb-2">
-                                            <a href="<?= url('/forum/' . $post['id']) ?>" class="text-dark text-decoration-none">
-                                                <?= e($post['title']) ?>
-                                            </a>
-                                        </h5>
-
-                                        <p class="text-muted small mb-3 lh-sm">
-                                            <?= e(truncate(strip_tags($post['content']), 140)) ?>
-                                        </p>
-
-                                        <!-- Meta footer -->
-                                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 pt-2 border-top small text-muted">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <span class="fw-semibold text-dark"><?= e($post['full_name'] ?? 'Sinh viên') ?></span>
-                                                <span>&bull;</span>
-                                                <span><?= formatDate($post['created_at'], 'H:i d/m/Y') ?></span>
-                                            </div>
-
-                                            <div class="d-flex align-items-center gap-3">
-                                                <span class="d-sm-none"><i class="bi bi-chat-dots me-1"></i><?= (int)$post['answers_count'] ?></span>
-                                                <span><i class="bi bi-eye me-1"></i><?= number_format((int)$post['view_count']) ?></span>
-                                            </div>
-                                        </div>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="<?= (int)$post['answers_count'] > 0 ? 'text-primary fw-semibold' : '' ?>">
+                                            <i class="bi bi-chat-dots me-1"></i><?= (int)$post['answers_count'] ?> câu trả lời
+                                        </span>
+                                        <span>
+                                            <i class="bi bi-eye me-1"></i><?= number_format((int)$post['view_count']) ?> lượt xem
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -245,8 +180,8 @@
                 <ul class="text-muted small mb-0 ps-3">
                     <li class="mb-1">Đặt tiêu đề ngắn gọn, đúng trọng tâm câu hỏi.</li>
                     <li class="mb-1">Mô tả rõ đề bài hoặc phần kiến thức bạn chưa hiểu.</li>
-                    <li class="mb-1">Tôn trọng ý kiến bạn bè, không dùng ngôn từ xúc phạm.</li>
-                    <li>Đánh dấu "Đã giải quyết" khi nhận được câu trả lời hữu ích.</li>
+                    <li class="mb-1">Bài đăng sẽ được duyệt trước khi hiển thị công khai.</li>
+                    <li>Tôn trọng ý kiến bạn bè, không dùng ngôn từ xúc phạm.</li>
                 </ul>
             </div>
         </div>

@@ -6,11 +6,11 @@
         <div class="row align-items-center g-4">
             <!-- Left Info Column -->
             <div class="col-lg-7 text-lg-start text-center">
-                <div class="d-inline-flex align-items-center gap-2 bg-white bg-opacity-15 px-3 py-1 rounded-pill mb-3 text-white border border-white border-opacity-25 small shadow-sm">
-                    <img src="<?= asset('images/logo.png') ?>" alt="Logo TMU" style="height: 24px; width: auto;" class="bg-white rounded-circle p-0.5">
-                    <span class="fw-semibold">Cổng Thông Tin Học Liệu Số TMU</span>
+                <div class="d-inline-flex align-items-center gap-2 bg-white px-3 py-1.5 rounded-pill mb-3 shadow-sm">
+                    <img src="<?= asset('images/logo.png') ?>" alt="Logo TMU" style="height: 22px; width: auto;">
+                    <span class="fw-bold text-primary small">Cổng Thông Tin Học Liệu Số TMU</span>
                 </div>
-                <h1 class="display-5 fw-bold mb-3 text-white">
+                <h1 class="display-5 fw-bold mb-3 text-white lh-sm">
                     Kho Tài Liệu Học Tập<br>
                     <span class="text-warning">Đại Học Thương Mại</span>
                 </h1>

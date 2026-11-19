@@ -86,18 +86,25 @@ class ForumController extends Controller
             $this->redirect('/forum/create');
         }
 
+        $status = isModerator() ? 'approved' : 'pending';
+
         $postId = (int)$this->postModel->create([
             'user_id'       => userId(),
             'faculty_id'    => $facultyId,
             'subject_id'    => $subjectId,
             'title'         => $title,
             'content'       => $content,
+            'status'        => $status,
             'view_count'    => 0,
             'answers_count' => 0,
             'is_solved'     => 0,
         ]);
 
-        flash('success', 'Câu hỏi của bạn đã được đăng thành công lên diễn đàn!');
+        if ($status === 'pending') {
+            flash('success', 'Câu hỏi của bạn đã được gửi thành công và đang chờ Quản trị viên duyệt trước khi hiển thị công khai.');
+        } else {
+            flash('success', 'Câu hỏi của bạn đã được đăng thành công lên diễn đàn!');
+        }
         $this->redirect('/forum/' . $postId);
     }
 
@@ -112,8 +119,17 @@ class ForumController extends Controller
             exit;
         }
 
-        // Tăng lượt xem
-        $this->postModel->incrementView($postId);
+        // Nếu bài viết chưa được duyệt hoặc bị từ chối: chỉ người đăng hoặc Quản trị viên / Kiểm duyệt viên mới được xem
+        if (($post['status'] ?? 'approved') !== 'approved') {
+            if (!auth() || (userId() !== (int)$post['user_id'] && !isModerator())) {
+                http_response_code(404);
+                $this->view('errors.404', [], 'main');
+                exit;
+            }
+        } else {
+            // Tăng lượt xem khi bài viết đã được duyệt công khai
+            $this->postModel->incrementView($postId);
+        }
 
         $answers = $this->answerModel->getByPost($postId);
 
@@ -124,6 +140,39 @@ class ForumController extends Controller
         ]);
     }
 
+    public function approve(array $params = []): void
+    {
+        $this->requireLogin();
+        $this->csrfValidate();
+
+        if (!isModerator()) {
+            flash('error', 'Bạn không có quyền duyệt câu hỏi.');
+            $this->redirect('/forum');
+        }
+
+        $postId = (int)$params['id'];
+        $post   = $this->postModel->findById($postId);
+
+        if (!$post || !empty($post['deleted_at'])) {
+            flash('error', 'Không tìm thấy câu hỏi.');
+            $this->redirect('/forum');
+        }
+
+        $this->postModel->approve($postId);
+
+        // Send notification to author
+        (new \App\Models\Notification())->send(
+            (int)$post['user_id'],
+            'approved',
+            'Câu hỏi diễn đàn đã được duyệt',
+            'Câu hỏi "' . $post['title'] . '" của bạn đã được duyệt và hiển thị công khai trên diễn đàn.',
+            '/forum/' . $postId
+        );
+
+        flash('success', 'Đã duyệt câu hỏi thành công! Bài viết đã được hiển thị công khai trên diễn đàn.');
+        $this->redirect('/forum/' . $postId);
+    }
+
     public function storeAnswer(array $params = []): void
     {
         $this->requireLogin();
@@ -132,8 +181,8 @@ class ForumController extends Controller
         $postId  = (int)$params['id'];
         $post    = $this->postModel->findById($postId);
 
-        if (!$post || !empty($post['deleted_at'])) {
-            flash('error', 'Câu hỏi không tồn tại hoặc đã bị xóa.');
+        if (!$post || !empty($post['deleted_at']) || ($post['status'] ?? 'approved') !== 'approved') {
+            flash('error', 'Câu hỏi không tồn tại hoặc chưa được phê duyệt để thảo luận.');
             $this->redirect('/forum');
         }
 

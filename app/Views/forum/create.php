@@ -73,9 +73,15 @@
                         </div>
 
                         <!-- Guidelines Alert -->
-                        <div class="alert alert-light border small text-muted mb-4">
+                        <div class="alert alert-light border small text-muted mb-3">
                             <i class="bi bi-info-circle text-primary me-2"></i>
-                            <strong>Mẹo hữu ích:</strong> Sau khi nhận được câu trả lời giải quyết được thắc mắc, hãy nhớ bấm <strong>"Chọn làm câu trả lời chuẩn nhất"</strong> để cảm ơn bạn bè nhé!
+                            <strong>Gợi ý:</strong> Bạn có thể chọn Khoa hoặc Môn học liên quan để các bạn cùng lớp/khoa dễ dàng tìm thấy và tham gia thảo luận.
+                        </div>
+
+                        <!-- Moderation Note -->
+                        <div class="alert alert-warning-subtle bg-warning bg-opacity-10 border border-warning-subtle small text-dark mb-4">
+                            <i class="bi bi-shield-check text-warning me-2 fs-6"></i>
+                            <strong>Kiểm duyệt nội dung:</strong> Câu hỏi của bạn sẽ được Quản trị viên duyệt trước khi hiển thị công khai trên diễn đàn.
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center">

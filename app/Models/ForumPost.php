@@ -11,7 +11,7 @@ class ForumPost extends Model
 
     public function getPaginated(int $page, int $perPage, array $filters = []): array
     {
-        $where = ["p.deleted_at IS NULL"];
+        $where = ["p.deleted_at IS NULL", "p.status = 'approved'"];
         $params = [];
 
         // Filter by solved status
@@ -125,13 +125,57 @@ class ForumPost extends Model
         return $this->update($id, ['deleted_at' => date('Y-m-d H:i:s')]);
     }
 
+    public function getPending(int $page = 1, int $perPage = 10): array
+    {
+        $whereClause = "p.deleted_at IS NULL AND p.status = 'pending'";
+        $countSql = "SELECT COUNT(*) FROM " . static::$table . " p WHERE {$whereClause}";
+        $total = (int)$this->db->fetchColumn($countSql);
+
+        $offset = ($page - 1) * $perPage;
+        $sql = "SELECT p.*, 
+                       u.username, u.full_name, u.avatar, u.role AS user_role,
+                       f.name AS faculty_name,
+                       s.name AS subject_name
+                FROM " . static::$table . " p
+                LEFT JOIN users u ON p.user_id = u.id
+                LEFT JOIN faculties f ON p.faculty_id = f.id
+                LEFT JOIN subjects s ON p.subject_id = s.id
+                WHERE {$whereClause}
+                ORDER BY p.created_at DESC
+                LIMIT {$perPage} OFFSET {$offset}";
+
+        $items = $this->db->fetchAll($sql);
+
+        return [
+            'items'        => $items,
+            'total'        => $total,
+            'current_page' => $page,
+            'last_page'    => max(1, (int)ceil($total / $perPage)),
+            'per_page'     => $perPage,
+        ];
+    }
+
+    public function getPendingCount(): int
+    {
+        return (int)$this->db->fetchColumn(
+            "SELECT COUNT(*) FROM " . static::$table . " WHERE deleted_at IS NULL AND status = 'pending'"
+        );
+    }
+
+    public function approve(int $id): bool
+    {
+        return $this->update($id, ['status' => 'approved']);
+    }
+
+    public function reject(int $id): bool
+    {
+        return $this->update($id, ['status' => 'rejected']);
+    }
+
     public function getStats(): array
     {
         $totalPosts = (int)$this->db->fetchColumn(
-            "SELECT COUNT(*) FROM " . static::$table . " WHERE deleted_at IS NULL"
-        );
-        $solvedPosts = (int)$this->db->fetchColumn(
-            "SELECT COUNT(*) FROM " . static::$table . " WHERE is_solved = 1 AND deleted_at IS NULL"
+            "SELECT COUNT(*) FROM " . static::$table . " WHERE deleted_at IS NULL AND status = 'approved'"
         );
         $totalAnswers = (int)$this->db->fetchColumn(
             "SELECT COUNT(*) FROM forum_answers WHERE deleted_at IS NULL"
@@ -139,7 +183,6 @@ class ForumPost extends Model
 
         return [
             'total_posts'   => $totalPosts,
-            'solved_posts'  => $solvedPosts,
             'total_answers' => $totalAnswers,
         ];
     }

@@ -249,6 +249,7 @@ CREATE TABLE IF NOT EXISTS forum_posts (
     subject_id     INT UNSIGNED DEFAULT NULL,
     title          VARCHAR(255) NOT NULL,
     content        TEXT NOT NULL,
+    status         ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
     view_count     INT UNSIGNED DEFAULT 0,
     answers_count  INT UNSIGNED DEFAULT 0,
     is_solved      TINYINT(1) DEFAULT 0,

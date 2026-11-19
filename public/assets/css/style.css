@@ -21,7 +21,8 @@ main {
 }
 
 /* Navbar */
-.navbar-brand { font-size: 1.3rem; letter-spacing: -0.5px; }
+.navbar-brand { font-size: 1.3rem; letter-spacing: -0.5px; white-space: nowrap; }
+.navbar .nav-link { white-space: nowrap; }
 
 /* Cards */
 .card { border-radius: 0.75rem; transition: box-shadow 0.2s; }

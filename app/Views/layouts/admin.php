@@ -54,7 +54,9 @@
 
 <?php
 $curPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-$pendingCount = (int)(new \App\Models\Document())->count(['status' => 'pending', 'deleted_at' => null]);
+$pendingDocCount   = (int)(new \App\Models\Document())->count(['status' => 'pending', 'deleted_at' => null]);
+$pendingForumCount = (int)(new \App\Models\ForumPost())->getPendingCount();
+$pendingCount      = $pendingDocCount + $pendingForumCount;
 ob_start();
 ?>
 <nav class="mt-2 flex-grow-1">

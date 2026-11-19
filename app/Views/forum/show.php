@@ -12,29 +12,63 @@
     <div class="row g-4">
         <!-- Main Content -->
         <div class="col-lg-8">
+            <?php if (($post['status'] ?? 'approved') === 'pending'): ?>
+                <div class="alert alert-warning border-0 shadow-sm p-4 mb-4 rounded-3">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-clock-history fs-1 text-warning"></i>
+                            <div>
+                                <h5 class="fw-bold text-dark mb-1">Câu hỏi đang chờ duyệt</h5>
+                                <p class="text-muted small mb-0">
+                                    <?php if (isModerator()): ?>
+                                        Bài đăng này chưa được công khai. Bạn có quyền phê duyệt hoặc từ chối bài đăng này.
+                                    <?php else: ?>
+                                        Câu hỏi của bạn đã được gửi thành công và đang chờ Quản trị viên phê duyệt trước khi hiển thị công khai.
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                        </div>
+                        <?php if (isModerator()): ?>
+                            <div class="d-flex gap-2">
+                                <form action="<?= url('/admin/forum/' . $post['id'] . '/approve') ?>" method="POST" class="d-inline">
+                                    <?= csrfField() ?>
+                                    <button type="submit" class="btn btn-success fw-bold btn-sm shadow-sm">
+                                        <i class="bi bi-check-lg me-1"></i>Duyệt ngay
+                                    </button>
+                                </form>
+                                <form action="<?= url('/admin/forum/' . $post['id'] . '/reject') ?>" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn từ chối bài viết này?');">
+                                    <?= csrfField() ?>
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-x-lg me-1"></i>Từ chối
+                                    </button>
+                                </form>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php elseif (($post['status'] ?? 'approved') === 'rejected'): ?>
+                <div class="alert alert-danger border-0 shadow-sm p-4 mb-4 rounded-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-x-octagon fs-1 text-danger"></i>
+                    <div>
+                        <h5 class="fw-bold text-danger mb-1">Câu hỏi đã bị từ chối</h5>
+                        <p class="text-muted small mb-0">Bài đăng này không phù hợp với quy định diễn đàn nên đã bị từ chối phê duyệt.</p>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <!-- Question Box -->
             <div class="card border-0 shadow-sm rounded-4 mb-4">
                 <div class="card-body p-4 p-md-5">
-                    <!-- Badges & Status -->
+                    <!-- Badges & Subject/Faculty Info -->
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
                         <div class="d-flex flex-wrap align-items-center gap-2">
-                            <?php if ((int)$post['is_solved'] === 1): ?>
-                                <span class="badge bg-success fs-6 px-3 py-2">
-                                    <i class="bi bi-check2-circle me-1"></i>Đã giải quyết
-                                </span>
-                            <?php else: ?>
-                                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
-                                    <i class="bi bi-question-circle me-1"></i>Đang chờ giải đáp
-                                </span>
-                            <?php endif; ?>
-
                             <?php if (!empty($post['subject_name'])): ?>
-                                <span class="badge bg-light text-primary border fs-6 px-2.5 py-2">
+                                <span class="badge bg-light text-primary border fs-6 px-3 py-2">
                                     <i class="bi bi-book me-1"></i><?= e($post['subject_name']) ?>
                                 </span>
                             <?php endif; ?>
                             <?php if (!empty($post['faculty_name'])): ?>
-                                <span class="badge bg-light text-muted border fs-6 px-2.5 py-2">
+                                <span class="badge bg-light text-muted border fs-6 px-3 py-2">
                                     <?= e($post['faculty_name']) ?>
                                 </span>
                             <?php endif; ?>
@@ -43,18 +77,10 @@
                         <!-- Actions for Question Owner / Moderator -->
                         <div class="d-flex align-items-center gap-2">
                             <?php if (auth() && (userId() === (int)$post['user_id'] || isModerator())): ?>
-                                <form action="<?= url('/forum/' . $post['id'] . '/solve') ?>" method="POST" class="d-inline">
-                                    <?= csrfField() ?>
-                                    <button type="submit" class="btn btn-sm <?= (int)$post['is_solved'] === 1 ? 'btn-outline-secondary' : 'btn-outline-success' ?>" title="Đổi trạng thái câu hỏi">
-                                        <i class="bi <?= (int)$post['is_solved'] === 1 ? 'bi-arrow-counterclockwise' : 'bi-check-lg' ?> me-1"></i>
-                                        <?= (int)$post['is_solved'] === 1 ? 'Mở lại câu hỏi' : 'Đánh dấu đã giải quyết' ?>
-                                    </button>
-                                </form>
-
                                 <form action="<?= url('/forum/' . $post['id'] . '/delete') ?>" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa câu hỏi này không?');">
                                     <?= csrfField() ?>
                                     <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa câu hỏi">
-                                        <i class="bi bi-trash"></i>
+                                        <i class="bi bi-trash me-1"></i>Xóa câu hỏi
                                     </button>
                                 </form>
                             <?php endif; ?>
@@ -79,6 +105,8 @@
                             <div class="text-muted small">
                                 <span><i class="bi bi-clock me-1"></i>Đăng lúc <?= formatDate($post['created_at'], 'H:i:s d/m/Y') ?></span>
                                 <span class="mx-2">&bull;</span>
+                                <span><i class="bi bi-chat-dots me-1"></i><?= count($answers) ?> câu trả lời</span>
+                                <span class="mx-2">&bull;</span>
                                 <span><i class="bi bi-eye me-1"></i><?= number_format((int)$post['view_count']) ?> lượt xem</span>
                             </div>
                         </div>
@@ -92,6 +120,7 @@
             </div>
 
             <!-- Answers Section -->
+            <?php if (($post['status'] ?? 'approved') === 'approved'): ?>
             <div id="answers" class="mb-4">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <h4 class="fw-bold mb-0">
@@ -110,15 +139,8 @@
                 <?php else: ?>
                     <div class="d-flex flex-column gap-3 mb-4">
                         <?php foreach ($answers as $ans): ?>
-                            <?php $isBest = (int)$ans['is_best_answer'] === 1; ?>
-                            <div id="answer-<?= $ans['id'] ?>" class="card shadow-sm <?= $isBest ? 'border-2 border-success bg-success-subtle bg-opacity-10' : 'border-0' ?>" style="border-radius: 10px;">
+                            <div id="answer-<?= $ans['id'] ?>" class="card shadow-sm border-0" style="border-radius: 10px;">
                                 <div class="card-body p-4">
-                                    <?php if ($isBest): ?>
-                                        <div class="badge bg-success text-white mb-3 px-3 py-2 fs-6 shadow-sm">
-                                            <i class="bi bi-patch-check-fill me-1"></i>⭐ Câu trả lời chuẩn nhất được người hỏi bình chọn
-                                        </div>
-                                    <?php endif; ?>
-
                                     <div class="d-flex align-items-center justify-content-between mb-3">
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px;">
@@ -141,17 +163,6 @@
 
                                         <!-- Answer actions -->
                                         <div class="d-flex align-items-center gap-2">
-                                            <!-- Chọn làm câu trả lời hay nhất (Chỉ chủ câu hỏi) -->
-                                            <?php if (auth() && userId() === (int)$post['user_id']): ?>
-                                                <form action="<?= url('/forum/' . $post['id'] . '/answers/' . $ans['id'] . '/best') ?>" method="POST" class="d-inline">
-                                                    <?= csrfField() ?>
-                                                    <button type="submit" class="btn btn-sm <?= $isBest ? 'btn-success' : 'btn-outline-success' ?>" title="<?= $isBest ? 'Hủy chọn câu trả lời hay nhất' : 'Chọn câu trả lời hay nhất' ?>">
-                                                        <i class="bi bi-patch-check me-1"></i>
-                                                        <?= $isBest ? 'Đã chọn câu trả lời này' : 'Chọn câu trả lời hay nhất' ?>
-                                                    </button>
-                                                </form>
-                                            <?php endif; ?>
-
                                             <!-- Xóa câu trả lời (Tác giả câu trả lời hoặc Admin/Moderator) -->
                                             <?php if (auth() && (userId() === (int)$ans['user_id'] || isModerator())): ?>
                                                 <form action="<?= url('/forum/answers/' . $ans['id'] . '/delete') ?>" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa câu trả lời này?');">
@@ -200,6 +211,13 @@
                     <?php endif; ?>
                 </div>
             </div>
+            <?php else: ?>
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-center text-muted mb-4">
+                    <i class="bi bi-shield-lock fs-1 text-secondary mb-2"></i>
+                    <h6 class="fw-bold text-dark">Khu vực trả lời đang khóa</h6>
+                    <p class="small mb-0">Người dùng sẽ có thể gửi câu trả lời sau khi câu hỏi được Ban quản trị phê duyệt.</p>
+                </div>
+            <?php endif; ?>
         </div>
 
         <!-- Right Column / Sidebar -->

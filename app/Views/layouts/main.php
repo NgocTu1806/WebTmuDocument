@@ -18,8 +18,8 @@
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="<?= url('/') ?>">
+    <div class="container-xl">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2 text-nowrap" href="<?= url('/') ?>">
             <img src="<?= asset('images/logo.png') ?>" alt="Logo TMU" style="height: 38px; width: auto; object-fit: contain;" class="bg-white rounded px-1 py-0.5 shadow-sm">
             <span>TMU Tài Liệu</span>
         </a>
@@ -29,7 +29,7 @@
 
         <div class="collapse navbar-collapse" id="navMenu">
             <!-- Search bar -->
-            <form class="d-flex mx-auto w-50" action="<?= url('/search') ?>" method="GET">
+            <form class="d-flex mx-lg-3 my-2 my-lg-0 flex-grow-1" style="max-width: 320px;" action="<?= url('/search') ?>" method="GET">
                 <input class="form-control me-2" type="search" name="q"
                        placeholder="Tìm kiếm tài liệu..."
                        value="<?= e($_GET['q'] ?? '') ?>">
@@ -38,26 +38,26 @@
                 </button>
             </form>
 
-            <ul class="navbar-nav ms-auto align-items-center">
+            <ul class="navbar-nav ms-auto align-items-center gap-1">
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= url('/documents') ?>">
+                    <a class="nav-link text-nowrap" href="<?= url('/documents') ?>">
                         <i class="bi bi-files me-1"></i>Tài liệu
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= url('/faculties') ?>">
+                    <a class="nav-link text-nowrap" href="<?= url('/faculties') ?>">
                         <i class="bi bi-diagram-3 me-1"></i>Danh mục
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= url('/forum') ?>">
+                    <a class="nav-link text-nowrap" href="<?= url('/forum') ?>">
                         <i class="bi bi-chat-square-text me-1"></i>Hỏi đáp
                     </a>
                 </li>
 
                 <?php if (auth()): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= url('/documents/create') ?>">
+                        <a class="nav-link text-nowrap" href="<?= url('/documents/create') ?>">
                             <i class="bi bi-cloud-upload me-1"></i>Đăng tải
                         </a>
                     </li>
@@ -68,7 +68,7 @@
                         $unreadCount = $notifModel->getUnreadCount(userId());
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link position-relative" href="<?= url('/notifications') ?>">
+                        <a class="nav-link position-relative text-nowrap px-2" href="<?= url('/notifications') ?>" title="Thông báo">
                             <i class="bi bi-bell fs-5"></i>
                             <?php if ($unreadCount > 0): ?>
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -79,8 +79,8 @@
                     </li>
 
                     <!-- User dropdown -->
-                    <li class="nav-item dropdown ms-2">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#"
+                    <li class="nav-item dropdown ms-lg-2">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 text-nowrap" href="#"
                            data-bs-toggle="dropdown">
                             <?php $user = currentUser(); ?>
                             <?php $avatarSrc = avatarUrl((int)$user['id'], $user['avatar'] ?? null); ?>
@@ -129,11 +129,11 @@
                         </ul>
                     </li>
                 <?php else: ?>
-                    <li class="nav-item ms-2">
-                        <a class="btn btn-outline-light btn-sm" href="<?= url('/login') ?>">Đăng nhập</a>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-outline-light btn-sm text-nowrap" href="<?= url('/login') ?>">Đăng nhập</a>
                     </li>
-                    <li class="nav-item ms-2">
-                        <a class="btn btn-light btn-sm text-primary fw-semibold" href="<?= url('/register') ?>">Đăng ký</a>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-light btn-sm text-primary fw-semibold text-nowrap" href="<?= url('/register') ?>">Đăng ký</a>
                     </li>
                 <?php endif; ?>
             </ul>

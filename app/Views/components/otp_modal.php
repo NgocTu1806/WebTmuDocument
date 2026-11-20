@@ -36,6 +36,7 @@ const OtpManager = (() => {
     let sendUrl = '';
     let verifyUrl = '';
     let payload = {};
+    let fallbackRedirect = '';
 
     const overlay     = document.getElementById('otpModalOverlay');
     const subText     = document.getElementById('otpSubText');
@@ -78,16 +79,26 @@ const OtpManager = (() => {
         }, 1000);
     }
 
+    function getCsrfToken() {
+        const el = document.querySelector('input[name="_csrf_token"]');
+        return el ? el.value : '';
+    }
+
     async function requestOtp() {
         btnResend.disabled = true;
         setMsg('Đang gửi mã OTP...', false);
         try {
             const res = await fetch(sendUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...payload, otp })
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': getCsrfToken()
+                },
+                body: new URLSearchParams(payload)
             });
-            const data = await res.json();
+            const rawText = await res.text();
+            console.log('Server response (send-otp):', rawText);
+            const data = JSON.parse(rawText);
             if (data.success) {
                 subText.textContent = data.message;
                 setMsg('');
@@ -96,6 +107,7 @@ const OtpManager = (() => {
                 startTimer(data.expires_in || 60);
             } else {
                 clearInterval(timer);
+                subText.textContent = 'Không thể gửi mã OTP';
                 countdownEl.textContent = '--:--';
                 btnVerify.disabled = true;
                 btnVerify.style.opacity = '0.5';
@@ -112,7 +124,9 @@ const OtpManager = (() => {
         sendUrl = config.sendUrl;
         verifyUrl = config.verifyUrl;
         payload = config.payload;
+        fallbackRedirect = config.redirectUrl || '';
         inputEl.value = '';
+        setMsg('');
         overlay.style.display = 'flex';
         requestOtp();
     }
@@ -127,16 +141,23 @@ const OtpManager = (() => {
         try {
             const res = await fetch(verifyUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ otp })
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': getCsrfToken()
+                },
+                body: new URLSearchParams({ ...payload, otp })
             });
-            const data = await res.json();
+            const rawText = await res.text();
+            console.log('Server response (verify-otp):', rawText);
+            const data = JSON.parse(rawText);
             if (data.success) {
                 clearInterval(timer);
                 setMsg(data.message, false);
                 setTimeout(() => {
                     if (data.redirect_url) {
                         window.location.href = data.redirect_url;
+                    } else if (fallbackRedirect) {
+                        window.location.href = fallbackRedirect;
                     } else {
                         overlay.style.display = 'none';
                         window.location.reload();
